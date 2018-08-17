@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Form, Button} from 'semantic-ui-react';
 import Validator from "validator";
 import InlineError from "../messages/InlineError";
-import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from 'constants';
 
 class LoginForm extends React.Component {
     state = {
@@ -12,12 +12,16 @@ class LoginForm extends React.Component {
         },
         loading: false,
         errors: {}
-    }
+    };
 
     onSubmit = () => {
         const errors = this.validate(this.state.data);
         this.setState({ errors });
-    }
+
+        if(Object.keys(errors).length === 0) {
+            this.props.submit(this.state.data);
+        }
+    };
 
     validate = (data) => {
         const errors = {};
@@ -25,9 +29,7 @@ class LoginForm extends React.Component {
         if(!data.password) errors.password = "Cant be blank";
 
         return errors;
-    }
-
-
+    };
 
     onChange = e => 
         this.setState({ 
@@ -67,6 +69,9 @@ class LoginForm extends React.Component {
     }
 }
 
+LoginForm.propTypes = {
+    submit: PropTypes.func.isRequired
+}
 
 
 export default LoginForm;
