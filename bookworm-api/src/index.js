@@ -1,10 +1,19 @@
 import express from 'express';
 import path from 'path';
+import auth from "./routes/auth";
 import mongoose from 'mongoose';
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+
+
 
 const app = express();
-mongoose.connect('mongodb://localhost/bookworm', { useNewUrlParser: true });
+app.use(bodyParser.json());
 
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_DB_URL, { useNewUrlParser: true });
+app.use('/api/auth', auth);
 
 app.post('/api/auth', (req, res) => {
     res.status(400).json({ errors: { global: "Invalid credentials" }});
